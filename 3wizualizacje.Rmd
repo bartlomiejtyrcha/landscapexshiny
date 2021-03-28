@@ -1,0 +1,96 @@
+---
+title: "Wizualizacje"
+author: "Bartłomiej Tyrcha"
+date: "28 03 2021"
+output: html_document
+---
+
+_Wczytanie danych_
+```{r start, warning=FALSE, error = FALSE, message=FALSE}
+library(landscapemetrics)
+library(landscapetools)
+library(raster)
+library(dplyr)
+example_raster = raster("landscapes.tif")
+example_orto = raster("ortofotomapa.tif")
+augusta = landscapemetrics::augusta_nlcd
+```
+## Wizualizacje krajobrazy
+
+**show_landscape()**
+
+```{r vis_landscape_augusta, message=FALSE, error=FALSE, error=FALSE}
+show_landscape(augusta)
+```
+
+```{r vis_landscape_raster, message=FALSE, error=FALSE, error=FALSE}
+show_landscape(example_raster)
+```
+
+
+
+## Wizaulizacje pól
+
+**show_patches()** 
+
+```{r vis_patches_augusta, message=FALSE, error=FALSE, error=FALSE}
+show_patches(augusta)
+```
+
+```{r vis_patches_raster, message=FALSE, error=FALSE, error=FALSE}
+show_patches(example_raster)
+```
+
+
+
+### Można także zwizualizować w rozróżnieniu na klasy:
+
+**show_patches(landscape, class = "all", labels = FALSE)**
+```{r vis_patches_classes_augusta, message=FALSE, error=FALSE, error=FALSE}
+show_patches(augusta, class = "all", labels = FALSE)
+```
+
+
+## Wizualizacje rdzeni
+
+**show_cores()**
+
+```{r vis_core_augusta, message=FALSE, error=FALSE, error=FALSE}
+show_cores(augusta)
+```
+```{r vis_core_raster, message=FALSE, error=FALSE, error=FALSE}
+show_cores(example_raster)
+```
+
+
+
+## Wizualizacje wyliczonych metryk
+
+Za pomocą funkcji **show_lsm()** można zwizualizować uzyskane wyniki wyliczonych metryk krajobrazowych dla wszystkich klas i dla każdej osobnej klasy.  
+  
+Dla wszystkich klas:
+```{r vis_lsm_augusta, warning = FALSE, message=FALSE, warning=FALSE}
+show_lsm(augusta, what = "lsm_p_area", class = "global", label_lsm = TRUE)
+```
+  
+Dla każdej klasy:
+```{r vis_lsm_augusta_cl, warning = FALSE, message=FALSE, warning=FALSE}
+show_lsm(augusta, what = "lsm_p_area", class = "all", label_lsm = TRUE)
+```
+  
+*lsm_p_ncore()*
+
+```{r vis_lsm_augusta_cl_ed, warning = FALSE, message=FALSE, warning=FALSE}
+show_lsm(augusta, what = "lsm_p_ncore", class = "all", label_lsm = TRUE)
+```
+  
+## Wizualizacje korelacji - miary podobieństwa
+
+```{r vis_cor_augusta, warning = FALSE, error = FALSE, message = FALSE}
+show_correlation(calculate_lsm(augusta, what = "patch"), method = "pearson")
+```
+
+
+
+
+

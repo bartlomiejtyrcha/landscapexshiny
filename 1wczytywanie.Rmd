@@ -1,0 +1,51 @@
+---
+title: "1. Wczytywanie danych przestrzennych"
+author: "Bartłomiej Tyrcha"
+date: "26 03 2021"
+output: html_document
+---
+# Wczytywanie danych
+```{r}
+library(landscapemetrics)
+library(landscapetools)
+library(raster)
+```
+
+### Aby poprawnie wczytać dane potrzebny jest pakiet **raster**.  
+Plik _ortofotomapa.tif_ jest ortofotomapą pobraną z Geoportalu.  
+
+```{r}
+example_raster = raster("landscapes.tif")
+```
+
+```{r}
+example_orto = raster("ortofotomapa.tif")
+```
+```{r}
+augusta = landscapemetrics::augusta_nlcd
+```
+
+Obiekt _augusta_ został wczytany z pakietu **landscapemetrics**.
+
+# Wizualizacja rastrów
+
+```{r}
+plot(example_orto)
+```
+```{r}
+plot(example_raster)
+```
+```{r}
+plot(augusta)
+```
+
+# Sprawdzenie poprawności 
+```{r}
+check_landscape(example_raster)
+```
+```{r}
+check_landscape(augusta)
+```
+```{r}
+check_landscape(example_orto)
+```

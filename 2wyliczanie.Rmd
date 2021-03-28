@@ -1,0 +1,125 @@
+---
+title: "2. Wyliczanie metryk krajobrazowych"
+author: "Bartłomiej Tyrcha"
+date: "26 03 2021"
+output: html_document
+---
+_Wczytanie danych_
+```{r start, warning=FALSE, error = FALSE, message=FALSE}
+library(landscapemetrics)
+library(landscapetools)
+library(raster)
+library(dplyr)
+example_raster = raster("landscapes.tif")
+example_orto = raster("ortofotomapa.tif")
+augusta = landscapemetrics::augusta_nlcd
+```
+## Słowem wstępu
+
+
+Wszystkie funkcje wyliczające zaczynają się od **lsm_POZIOM_METRYKA** .  
+
+1. lsm_**p**_METRYKA - łata/pole (tu nie wiem w sumie)  
+2. lsm_**c**_METRYKA - klasa  
+3. lsm_**l**_METRYKA - krajobraz   
+
+Funkcja _list_lsm()_ służy do wyświetlenia listy funkcji wyliczających (jest ich **132**).  
+
+```{r lsmlist}
+lsmlist = list_lsm()
+head(lsmlist)
+```
+
+Rozróżniamy sześć typów metryk w pakiecie landscapemetrics.
+
+```{r type_of_lsm, echo=FALSE}
+distinct(lsmlist, type)
+```
+
++ Metryka powierzchni i krawędzi
++ Metryka powierzchni rdzenia
++ Metryka kształtu
++ Metryka złożoności
++ Metryka różnorodności
+
+```{r area_m, echo = FALSE, warning = FALSE, error = FALSE, message = FALSE}
+lsm_namestypes = distinct(lsmlist, name, type) 
+filter(lsm_namestypes, type == 'area and edge metric')
+```
+
+W typie metryk powierzchni i krawędzi są powierzchnie pola (*lsm_p_area()*), promienie wirowania (np. *lsm_p_gyrate()*),  
+parametry pola (*lsm_p_perim*), całkowite powierzchnie klas (*lsm_c_ca()*), 'gęstość' krawędzi (*lsm_l_ed()*), największy indeks pola (np. *lsm_c_lpi*),  
+procent stosunku klasy do krajobrazu(*lsm_c_pland()*), suma wszystkich krawędzi i suma pól (*lsm_c_te()* to suma krawędzi w klasie, a *lsm_l_ta()* to suma wszystkich pól w krajobrazie)  
+
+### lsm_**p**_METRYKA
+
+**lsm_p_area** - służy do obliczenia powierzchni każdego płata w hektarach  
+  
+lsm_p_area(landscape, directions = 8)  
+  
+landscape - obiekt rastrowy  
+directions - kierunki (domyślnie 8)  
+```{r}
+head(lsm_p_area(augusta))
+```
+```{r p_area_directions}
+lsm_p_area(augusta, 4)
+```
+```{r p_area}
+lsm_p_area(example_raster)
+```
+
+
+**lsm_p_cai**pewdiepie rick roll
+
+lsm_p_cai(landscape, directions = 8, consider_boundary = FALSE, edge_depth = 1)  
+
+landscape - obiekt rastrowy   
+directions - kierunki  
+consider_boundary - logiczne jeśli komórki sąsiadują z granicą krajobrazu  
+edge_depth - Odległość (w komórkach) komórka musi być oddalona od krawędzi łaty, aby można ją było uznać za komórkę rdzeniową  
+```{r p_cai}
+lsm_p_cai(augusta)
+```
+
+```{r}
+lsm_p_cai(augusta, directions = 4, consider_boundary = TRUE, edge_depth = 0)
+```
+
+**lsm_p_circle** to stosunek pomiędzy powierzchnią łaty, a najmniejszym okręgiem łaty
+
+lsm_p_circle(landscape, directions = 8)
+
+```{r p_circle}
+lsm_p_circle(augusta)
+```
+
+**lsm_p_contig** - metryka ta ocenia przestrzenną spójność komórek w łatach  
+
+lsm_p_contig(landscape, directions = 8)  
+
+```{r p_contif}
+lsm_p_contig(augusta)
+```
+
+**lsm_p_core** - powierzchnia łaty, która nie znajduje się na krawędzi  
+lsm_p_core(  
+  landscape,  
+  directions = 8,  
+  consider_boundary = FALSE,  
+  edge_depth = 1  
+)  
+
+```{r p_core}
+lsm_p_core(augusta)
+```
+
+**lsm_p_enn** - odległość do najbliższego sąsiadniego pola tej samej klasy
+
+lsm_p_enn(landscape, directions = 8, verbose = TRUE)  
+  
+verbose - wyświetla ostrzeżenie, jeśli nie ma wystarczającego pola
+
+```{r enn}
+lsm_p_enn(augusta)
+```

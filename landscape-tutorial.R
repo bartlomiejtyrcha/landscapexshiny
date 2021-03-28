@@ -1,12 +1,11 @@
 library(landscapemetrics)
 library(landscapetools)
 library(raster)
+library(dplyr)
 ??landscapemetrics
+install.packages("rgdal")
 #wczytanie rastrów
-example_raster = raster("landscapes.tif")
-example_orto = raster("ortofotomapa.tif")
-augusta = landscapemetrics::augusta_nlcd
-#plot(example_orto)
+
 #plot(example_raster)
 #plot(augusta)
 # Sprawdzenie poprawności 
@@ -14,8 +13,16 @@ check_landscape(example_raster)
 check_landscape(augusta)
 check_landscape(example_orto)
 ### Lista funkcji
+lsmlist = list_lsm()
+lsm_namestypes = distinct(lsmlist, name, type) 
+filter(lsm_namestypes, type == 'area and edge metric')
+?lsm_p_enn
+
+filter(lsmlist, name == 'total area')
+
 View(list_lsm())
 
+list_lsm(level = 'patch')
 ### Wizualizacja metryk - możliwość wyboru wizualizacji
 show_landscape(example_raster)
 show_patches(example_raster)
@@ -35,3 +42,7 @@ show_correlation(calculate_lsm(augusta, what = "patch"), method = "pearson")
 
 
 ### MOVING WINDOWS
+moving_window <- matrix(1, nrow = 3, ncol = 3)
+moving_window
+result <- window_lsm(augusta, window = moving_window, what = c("lsm_l_pr", "lsm_l_joinent"))
+result
