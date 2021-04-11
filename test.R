@@ -4,6 +4,20 @@ library(shiny)
 library(landscapemetrics)
 library(landscapetools)
 library(raster)
+library(dplyr)
+library(stringr)
 landscapes = raster("landscapes.tif")
 
 
+list_lsm = list_lsm()
+patch = filter(list_lsm, level == "patch")
+landscape = filter(list_lsm, level == "landscape")
+class = filter(list_lsm, level == "class")
+
+#list_lsm$function_name
+
+View(list_lsm)
+show_landscape(augusta)
+
+a = lsm_p_cai(augusta)
+str(a)
