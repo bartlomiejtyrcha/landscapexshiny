@@ -18,34 +18,41 @@ ui <- fluidPage(
         
         # Sidebar panel for inputs ----
         sidebarPanel(
-            fileInput("file1", "Choose raster file", accept = "image/*"),
-            selectInput("level", "Choose a level:",
+            fileInput("file1", "Choose raster file", accept = "image/*"), # Upload file - Input
+            selectInput("level", "Choose a level:", 
                         list('patch' = patch$function_name,
                              'landscape' = landscape$function_name,
                              'class' = class$function_name
-                        )),
+                        ), multiple = TRUE),
             textOutput("results")
         ),
         mainPanel(
             
             plotOutput("mapPlot")
                         )
+        ),
+    fluidRow(
+        column(12,
+               dataTableOutput('checklandscapeTable') # check_landscape() table - Output
         )
+    )
     )
 
 
 server = function(input, output){
     inFile = reactive({
-        raster::raster(input$file1$datapath)
+        raster::raster(input$file1$datapath) # Upload table, input - reactive()
     })
     output$results = renderText({
-        paste("You choose", input$level)
+        paste("You choose:")
+        paste(input$level)
     })
-    output$mapPlot = renderPlot(
+    output$mapPlot = renderPlot( #Plot raster object
         {
             plot(inFile());
         }
     )
+    #output$checklandscapeTable = renderDataTable(check_landscape(inFile())) # render Table 
 }
             
 # Run the application 

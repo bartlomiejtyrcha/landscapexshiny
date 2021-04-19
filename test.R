@@ -6,6 +6,7 @@ library(landscapetools)
 library(raster)
 library(dplyr)
 library(stringr)
+library(stars)
 landscapes = raster("landscapes.tif")
 
 
@@ -21,3 +22,6 @@ show_landscape(augusta)
 
 a = lsm_p_cai(augusta)
 str(a)
+a = landscapemetrics::augusta_nlcd
+save.image("a.tif")
+
