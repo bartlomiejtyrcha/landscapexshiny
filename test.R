@@ -6,7 +6,6 @@ library(landscapetools)
 library(raster)
 library(dplyr)
 library(stringr)
-library(stars)
 landscapes = raster("landscapes.tif")
 
 
@@ -25,3 +24,8 @@ str(a)
 a = landscapemetrics::augusta_nlcd
 save.image("a.tif")
 
+check_landscape(example_raster)
+str(check_landscape(example_raster))
+View(check_landscape(example_raster))
+
+?c()
