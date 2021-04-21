@@ -14,3 +14,7 @@ distinct(list_lsm, name)$name
 patch = filter(list_lsm, level == "patch")
 landscape = filter(list_lsm, level == "landscape")
 class = filter(list_lsm, level == "class")
+
+show_landscape()
+
+install.packages("shinythemes")

@@ -1,29 +1,21 @@
-ui=shinyUI(fluidPage(pageWithSidebar(
-    headerPanel("Header1"),
-    sidebarPanel(
-        fileInput('layer', 'Choose Layer', multiple=FALSE, accept='asc'),
-        fileInput('shape', 'Choose gml', multiple=FALSE, accept="gml")
+ui <- fluidPage(
+    sliderInput("obs", "Number of observations", 0, 1000, 500),
+    actionButton("goButton", "Go!", class = "btn-success"),
+    plotOutput("distPlot")
+)
+
+server <- function(input, output) {
+    output$distPlot <- renderPlot({
+        # Take a dependency on input$goButton. This will run once initially,
+        # because the value changes from NULL to 0.
+        input$goButton
         
-    ),
-    mainPanel(
-        plotOutput("mapPlot")
-    )
-)))
-
-
-server = shinyServer(function(input,output){
-    
-    inFile <- reactive({
-        raster::brick(input$layer$datapath)
+        # Use isolate() to avoid dependency on input$obs
+        dist <- isolate(rnorm(input$obs))
+        hist(dist)
     })
-    
-    inShp = reactive({
-        readOGR(input$shape$datapath)
-    })
-    
-    output$mapPlot<-renderPlot(
-        {
-            plot(inFile());
-            plot(inShp(), add=TRUE)
-        })
-})
+}
+
+shinyApp(ui, server)
+
+}

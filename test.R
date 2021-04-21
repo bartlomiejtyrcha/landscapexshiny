@@ -28,4 +28,24 @@ check_landscape(example_raster)
 str(check_landscape(example_raster))
 View(check_landscape(example_raster))
 
-?c()
+
+
+show_landscape(landscapes)
+show_cores(landscapes)
+show_patches(landscapes)
+
+func = function(input){
+  if(input == "Show landscape"){
+    show_landscape(landscapes)
+  }
+  else if(input == "Show cores"){
+    show_cores(landscapes)
+  }
+  else if(input == "Show patch"){
+    show_patches(landscapes)
+  }
+  else if(input == "Image"){
+    plot(landscapes)
+  }
+}
+func("Image")

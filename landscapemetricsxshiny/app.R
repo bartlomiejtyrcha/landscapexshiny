@@ -2,6 +2,7 @@ library(landscapemetrics)
 library(landscapetools)
 library(shiny)
 library(shinyWidgets)
+library(shinythemes)
 library(raster)
 library(dplyr)
 list_lsm = list_lsm()
@@ -13,9 +14,12 @@ name = distinct(list_lsm, name)$name
 patch = filter(list_lsm, level == "patch")
 landscape = filter(list_lsm, level == "landscape")
 class = filter(list_lsm, level == "class")
+
+
+options(shiny.maxRequestSize = 100*1024^2) # upload
 # Define UI for app that draws a histogram ----
 ui <- fluidPage(
-    
+    theme = shinytheme("darkly"),
     # App title ----
     titlePanel("Landscapemetrics x Shiny"),
     
@@ -39,8 +43,12 @@ ui <- fluidPage(
             textOutput("results")
         ),
         mainPanel(
-            
-            plotOutput("mapPlot")
+            selectInput("optionplot", "Choose an option:", c('Image','Landscape','Cores', 'Patches')),
+            plotOutput("plot")
+            #plotOutput("mapPlot"), #Raster plot
+            #plotOutput("PlotLandscape"), #show_landscape()
+            #plotOutput("PlotPatch"), #show_patches
+            #plotOutput("PlotCore"),
                         )
         ),
     fluidRow(
@@ -56,11 +64,33 @@ server = function(input, output){
     inFile = reactive({
         raster::raster(input$file1$datapath) # Upload table, input - reactive()
     })
-    output$mapPlot = renderPlot( #Plot raster object
-        {
-            plot(inFile());
+    #output$mapPlot = renderPlot( #Plot raster object
+    #    {
+    #        plot(inFile());
+    #    }
+    #)
+    output$plot = renderPlot({{
+        func_plot = function(input){
+            if(input == "Landscape"){
+                show_landscape(inFile())
+            }
+            else if(input == "Cores"){
+                show_cores(inFile())
+            }
+            else if(input == "Patches"){
+                show_patches(inFile())
+            }
+            else if(input == "Image"){
+                plot(inFile())
+            }
         }
+    }
+    func_plot(input$optionplot)}
+        
     )
+    #output$PlotLandscape = renderPlot({show_landscape(inFile())})
+    #output$PlotPatch = renderPlot({show_patches(inFile())})
+    #output$PlotCore = renderPlot({show_cores(inFile())})
     output$checklandscapeTable = renderDataTable(check_landscape(inFile())) # renderTable check_landscape()
     output$calculate = renderDataTable(calculate_lsm(inFile(), level = input$level, 
                                                      name = input$name, type = input$type, 
