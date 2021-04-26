@@ -34,21 +34,26 @@ ui <- fluidPage(
             pickerInput("name","Choose a name (???)", choices=name, options = list(`actions-box` = TRUE),multiple = T),
             pickerInput("function_name","Choose a function", choices=list('patch' = patch$function_name, 'landscape' = landscape$function_name,
                                                                           'class' = class$function_name), options = list(`actions-box` = TRUE),multiple = T),
-            textInput("directions", "Directions"),
+            textInput("directions", "Directions", value = 8),
             # selectInput("level", "Choose a level:", 
             #            list('patch' = patch$function_name,
             #                 'landscape' = landscape$function_name,
             #                 'class' = class$function_name
             #            ), multiple = TRUE),
-            textOutput("results")
+            textOutput("results"),
+            selectInput("count_boundary", "count_boundary:",
+                        c("TRUE" = TRUE,
+                          "FALSE" = FALSE), selected = "FALSE")#,
+            #selectInput("consider_boundary", "consider_boundary:", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE")
         ),
         mainPanel(
             selectInput("optionplot", "Choose an option:", c('Image','Landscape','Cores', 'Patches')),
-            plotOutput("plot")
+            plotOutput("plot"),
             #plotOutput("mapPlot"), #Raster plot
             #plotOutput("PlotLandscape"), #show_landscape()
             #plotOutput("PlotPatch"), #show_patches
             #plotOutput("PlotCore"),
+            downloadButton("downloadData", "Download CSV")
                         )
         ),
     fluidRow(
@@ -94,7 +99,21 @@ server = function(input, output){
     output$checklandscapeTable = renderDataTable(check_landscape(inFile())) # renderTable check_landscape()
     output$calculate = renderDataTable(calculate_lsm(inFile(), level = input$level, 
                                                      name = input$name, type = input$type, 
-                                                     what = input$function_name, directions = input$directions)) # calculatelsm()
+                                                     what = input$function_name, directions = input$directions,
+                                                     count_boundary = input$count_boundary#,
+                                                     #consider_boundary = input$consider_boundary
+                                                     )) # calculatelsm()
+    output$downloadData <- downloadHandler(
+    filename = function() {
+      paste(input$calculate, ".csv", sep = "")
+    },
+    content = function(file) {
+      write.csv(calculate_lsm(inFile(), level = input$level, 
+                              name = input$name, type = input$type, 
+                              what = input$function_name, directions = input$directions,
+                              count_boundary = input$count_boundary), file, row.names = FALSE)
+    }
+  )
 }
             
 # Run the application 
