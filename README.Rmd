@@ -1,7 +1,0 @@
----
-title: "1. Wczytywanie danych przestrzennych"
-author: "Bartłomiej Tyrcha"
-date: "26 03 2021"
----
-# landscapexshiny
-
