@@ -27,10 +27,16 @@ ui <-
                tabPanel(icon("home"), 
                         p("Homepage/index")), 
                tabPanel("Upload file",
-                        fileInput("file1", "Choose raster file", accept = "image/*"),# Upload file - Input
-                        plotOutput("rasterPlot")
+                        sidebarPanel(
+                          fileInput("file1", "Choose raster file", accept = "image/*")# Upload file - Input
                         ),
-               tabPanel("Step2",
+                        mainPanel(plotOutput("rasterPlot")
+                        )),
+               tabPanel("Visualization",
+                        selectInput("optionplot", "Choose an option:", c('Image','Landscape','Cores', 'Patches')),
+                        plotOutput("plot"),
+                        p("Tu będzie przycisk do pobrania wizualizacji")),
+               tabPanel("Calculate",
     # Sidebar layout with input and output definitions ----
     sidebarLayout(
         
@@ -55,8 +61,7 @@ ui <-
             #selectInput("consider_boundary", "consider_boundary:", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE")
         ),
         mainPanel(
-            selectInput("optionplot", "Choose an option:", c('Image','Landscape','Cores', 'Patches')),
-            plotOutput("plot"),
+            
             #plotOutput("mapPlot"), #Raster plot
             #plotOutput("PlotLandscape"), #show_landscape()
             #plotOutput("PlotPatch"), #show_patches
@@ -70,7 +75,8 @@ ui <-
                dataTableOutput('calculate') # calculate_lsm() output
         )
     )
-    )))
+    )
+    ))
 
 
 server = function(input, output){
