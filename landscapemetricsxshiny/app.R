@@ -17,12 +17,20 @@ class = filter(list_lsm, level == "class")
 
 
 options(shiny.maxRequestSize = 100*1024^2) # upload
-# Define UI for app that draws a histogram ----
-ui <- fluidPage(
-    theme = shinytheme("darkly"),
+
+ui <- 
+  fluidPage(
+    theme = shinytheme("darkly"), # THEME 
     # App title ----
     titlePanel("Landscapemetrics x Shiny"),
-    
+    navbarPage("something", 
+               tabPanel(icon("home"), 
+                        p("Homepage/index")), 
+               tabPanel("Upload file",
+                        fileInput("file1", "Choose raster file", accept = "image/*"),# Upload file - Input
+                        plotOutput("rasterPlot")
+                        ),
+               tabPanel("Step2",
     # Sidebar layout with input and output definitions ----
     sidebarLayout(
         
@@ -62,7 +70,7 @@ ui <- fluidPage(
                dataTableOutput('calculate') # calculate_lsm() output
         )
     )
-    )
+    )))
 
 
 server = function(input, output){
@@ -74,6 +82,7 @@ server = function(input, output){
     #        plot(inFile());
     #    }
     #)
+    output$rasterPlot = renderPlot({plot(inFile())})
     output$plot = renderPlot({{
         func_plot = function(input){
             if(input == "Landscape"){
