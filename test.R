@@ -6,7 +6,7 @@ library(landscapetools)
 library(raster)
 library(dplyr)
 library(stringr)
-landscapes = raster("landscapes.tif")
+landscapes = raster("example_raster/landscapes.tif")
 
 
 list_lsm = list_lsm()
