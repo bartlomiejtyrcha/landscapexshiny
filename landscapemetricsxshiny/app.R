@@ -64,7 +64,17 @@ ui <-
                         selectInput("progress", "progress", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE")),
                         actionButton("run", label = "Run")
                         ), 
-     tabPanel("Moving window"),
+     tabPanel("Moving window", sidebarPanel(
+       textInput("mw_cell", "Value", value = 1),
+       textInput("mw_nrow", "The desired number of rows", value = 3),
+       textInput("mw_ncol", "The desired number of columns", value = 3)
+     ),
+     fluidRow(
+       column(12,
+              dataTableOutput('moving_window')
+              )
+       )
+     ),
     tabPanel("Results",
              mainPanel(
                downloadButton("downloadDataCSV", "Download CSV"),
@@ -150,6 +160,12 @@ server = function(input, output){
         openxlsx::write.xlsx(Calculate(), file)
       }
     )
+    moving_window = reactive({
+      moving_window = matrix(input$mw_cell, nrow = input$mw_nrow, ncol = input$mw_ncol)
+      landscapemetrics::window_lsm(inFile(), window = moving_window, what = input$function_name)
+    })
+    output$moving_window <- renderDataTable(moving_window())
+    
 
     })}
 

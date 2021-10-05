@@ -29,3 +29,12 @@ bench::mark(
   iterations = 100, 
   check = FALSE
 )
+
+install.packages("NLMR")
+
+# nlm_gaussianfield
+
+random_gaussian = NLMR::nlm_gaussianfield(nrow = 100, ncol = 100,
+                                          autocorr_range = 10)
+plot(random_gaussian)
+writeRaster(random_gaussian, 'NLMR_Example1.tif')

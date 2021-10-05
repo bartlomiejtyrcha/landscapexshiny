@@ -96,3 +96,8 @@ write.xlsx(calculate_lsm(a, what = "lsm_c_area_sd"), file = paste0(Sys.time() %>
   pattern = "\\-",replacement = "\\_") %>% str_replace_all(
     pattern = "\\:", replacement = "\\") %>% str_replace(
       pattern = "\\ ", replacement = "\\_"), "_calculated",".xlsx"), row.names = FALSE)
+library(landscapemetrics)
+
+moving_window <- matrix(1, nrow = 3, ncol = 3)
+result = window_lsm(landscape, window = moving_window, what = c("lsm_l_pr", "lsm_l_joinent"))
+result
