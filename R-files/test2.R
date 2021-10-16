@@ -60,3 +60,19 @@ as.logical("")
 
 a = NULL
 is.null(a)
+
+list_lsm
+level = distinct(list_lsm, level = 'metric') %>% distinct(metric)
+level
+metric_filter = (filter(list_lsm, level == level[1]) %>% distinct(metric))$metric
+metric_filter[1]
+calculate_lsm(example_raster, level = 'class')
+calculate_lsm(example_raster, level = 'patch')
+calculate_lsm(example_raster, level = 'landscape')
+plot(example_raster)
+
+level = distinct(list_lsm, level)$level
+level
+level$'patch'
+level[1]
+  

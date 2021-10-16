@@ -109,6 +109,10 @@ shinyServer(function(input, output) {
                 openxlsx::write.xlsx(Calculate(), file)
             }
         )
+        observeEvent(input$level, {
+            print(paste0("You have chosen: ", input$level))
+        })
+        
         
     })
 })

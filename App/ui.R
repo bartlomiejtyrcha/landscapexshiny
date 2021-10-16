@@ -1,12 +1,3 @@
-#
-# This is the user-interface definition of a Shiny web application. You can
-# run the application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
 library(landscapemetrics)
 library(landscapetools)
@@ -18,7 +9,6 @@ library(raster)
 library(openxlsx)
 library(dplyr)
 list_lsm = list_lsm()
-
 
 type = distinct(list_lsm, type)$type
 level = distinct(list_lsm, level)$level
