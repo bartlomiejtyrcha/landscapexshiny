@@ -4,10 +4,13 @@ library(landscapetools)
 library(stringr)
 library(shiny)
 library(shinyWidgets)
+library(shinycssloaders)
 library(shinythemes)
 library(raster)
 library(openxlsx)
 library(dplyr)
+library(waiter)
+source("function.R")
 list_lsm = list_lsm()
 
 type = distinct(list_lsm, type)$type
@@ -29,6 +32,9 @@ options(shiny.maxRequestSize = 100*1024^2) # upload
 # Define UI for application that draws a histogram
 shinyUI(
     fluidPage(
+      useWaiter(),
+      waiterPreloader(html = spin_circles()),
+      waiterOnBusy(html = spin_circles()),
         theme = shinytheme("darkly"), # THEME 
         navbarPage("landscapemetrics x shiny", 
                    tabPanel(icon("home"), 
@@ -50,8 +56,17 @@ shinyUI(
                             p("Tu będzie przycisk do pobrania wizualizacji")),
                    tabPanel("Calculate",
                             flowLayout(
-                                pickerInput("level","Choose a level", choices=level, options = list(`actions-box` = TRUE),multiple = T),
-                                pickerInput("metric", "Choose a metric", choices=metric, options=list('actions-box' = TRUE),multiple = T),
+                                pickerInput(
+                                  "level","Choose a level", 
+                                  choices=as.vector(list_lsm() %>% distinct(level)), 
+                                  options = list(`actions-box` = TRUE),
+                                  multiple = T),
+                                pickerInput(
+                                  "metric", 
+                                  "Choose a metric", 
+                                  choices=metric, 
+                                  options=list('actions-box' = TRUE),
+                                  multiple = T),
                                 pickerInput("type","Choose a type", choices=type, options = list(`actions-box` = TRUE),multiple = T),
                                 pickerInput("name","Choose a name (???)", choices=name, options = list(`actions-box` = TRUE),multiple = T),
                                 pickerInput("function_name","Choose a function", choices=list('patch' = patch$function_name, 'landscape' = landscape$function_name,

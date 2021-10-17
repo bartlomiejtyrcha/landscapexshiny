@@ -75,4 +75,8 @@ level = distinct(list_lsm, level)$level
 level
 level$'patch'
 level[1]
-  
+
+example_raster = raster('example_raster/landscapes.tif')
+check_landscape(example_raster)
+
+install.packages("shinycssloaders")
