@@ -10,7 +10,10 @@ library(raster)
 library(openxlsx)
 library(dplyr)
 library(waiter)
+library(leaflet)
+library(leaflet.extras)
 source("function.R")
+library(rgdal)
 list_lsm = list_lsm()
 
 type = distinct(list_lsm, type)$type
@@ -118,6 +121,9 @@ shinyUI(
                                 )
                             )
                    ),
-                   tabPanel("Sampling around points of interest")
+                   tabPanel("Sampling around points of interest",
+                            mainPanel(
+                              leafletOutput("sampling")
+                            ))
         ))
 )

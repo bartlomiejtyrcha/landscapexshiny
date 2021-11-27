@@ -127,6 +127,18 @@ shinyServer(function(input, output){
         output$window = renderDataTable(Window())
     }
     ) #KONIEC INPUT RUN 2
+    output$sampling = renderLeaflet(
+      {
+        leaflet() %>%
+          addTiles() %>% addDrawToolbar(position = "topright",polylineOptions = drawPolylineOptions(),
+                                        polygonOptions = FALSE,
+                                        circleOptions = FALSE,
+                                        rectangleOptions =FALSE,
+                                        markerOptions = drawMarkerOptions(repeatMode = TRUE),
+                                        circleMarkerOptions = FALSE)
+        
+      }
+    )
     
     observeEvent(input$level, {
         print(paste0("You have chosen: ", input$level))
