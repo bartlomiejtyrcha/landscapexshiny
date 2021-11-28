@@ -39,7 +39,7 @@ shinyUI(
       waiterPreloader(html = spin_circles()),
       waiterOnBusy(html = spin_circles()),
         theme = shinytheme("darkly"), # THEME 
-        navbarPage("landscapemetrics x shiny", 
+        navbarPage("landscapemetrics x shiny",
                    tabPanel(icon("home"), 
                             p("Homepage/index")), 
                    tabPanel("Upload file",
@@ -58,37 +58,50 @@ shinyUI(
                             plotOutput("plot"),
                             p("Tu będzie przycisk do pobrania wizualizacji")),
                    tabPanel("Calculate",
-                            flowLayout(
-                                pickerInput(
-                                  "level","Choose a level", 
-                                  choices=as.vector(list_lsm() %>% distinct(level)), 
-                                  options = list(`actions-box` = TRUE),
-                                  multiple = T),
-                                pickerInput(
-                                  "metric", 
-                                  "Choose a metric", 
-                                  choices=metric, 
-                                  options=list('actions-box' = TRUE),
-                                  multiple = T),
-                                pickerInput("type","Choose a type", choices=type, options = list(`actions-box` = TRUE),multiple = T),
-                                pickerInput("name","Choose a name (???)", choices=name, options = list(`actions-box` = TRUE),multiple = T),
-                                pickerInput("function_name","Choose a function", choices=list('patch' = patch$function_name, 'landscape' = landscape$function_name,
-                                                                                              'class' = class$function_name), options = list(`actions-box` = TRUE),multiple = T),
-                                numericInput("directions", "Directions", value = 8),
-                                textOutput("results"),
-                                selectInput("count_boundary", "count_boundary:",
-                                            c(TRUE, FALSE), selected = FALSE),
-                                selectInput("consider_boundary", "consider_boundary:", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE"),
-                                numericInput("edge_depth", "edge_depth", value = 1),
-                                selectInput("cell_center", "cell_center", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE"),
-                                numericInput("classes_max", "classes_max", value = NULL),
-                                numericInput("neighbourhood", "neighbourhood", value = 4),
-                                selectInput("ordered", "ordered", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "TRUE"),
-                                selectInput("base", "base", c("log2" = "log2", "log" = "log", "log10" = "log10", "bits" = "bits"), selected = "log2"),
-                                selectInput("full_name", "full_name", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE"),
-                                selectInput("verbose", "verbose", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "TRUE"),
-                                selectInput("progress", "progress", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE")),
-                            actionButton("run", label = "Run")
+                            tabsetPanel(id = "Clct", 
+                                        tabPanel("Calculate",       
+                                          flowLayout(
+                                              pickerInput(
+                                                "level","Choose a level", 
+                                                choices=as.vector(list_lsm() %>% distinct(level)), 
+                                                options = list(`actions-box` = TRUE),
+                                                multiple = T),
+                                              pickerInput(
+                                                "metric", 
+                                                "Choose a metric", 
+                                                choices=metric, 
+                                                options=list('actions-box' = TRUE),
+                                                multiple = T),
+                                              pickerInput("type","Choose a type", choices=type, options = list(`actions-box` = TRUE),multiple = T),
+                                              pickerInput("name","Choose a name (???)", choices=name, options = list(`actions-box` = TRUE),multiple = T),
+                                              pickerInput("function_name","Choose a function", choices=list('patch' = patch$function_name, 'landscape' = landscape$function_name,
+                                                                                                            'class' = class$function_name), options = list(`actions-box` = TRUE),multiple = T),
+                                              numericInput("directions", "Directions", value = 8),
+                                              textOutput("results"),
+                                              selectInput("count_boundary", "count_boundary:",
+                                                          c(TRUE, FALSE), selected = FALSE),
+                                              selectInput("consider_boundary", "consider_boundary:", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE"),
+                                              numericInput("edge_depth", "edge_depth", value = 1),
+                                              selectInput("cell_center", "cell_center", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE"),
+                                              numericInput("classes_max", "classes_max", value = NULL),
+                                              numericInput("neighbourhood", "neighbourhood", value = 4),
+                                              selectInput("ordered", "ordered", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "TRUE"),
+                                              selectInput("base", "base", c("log2" = "log2", "log" = "log", "log10" = "log10", "bits" = "bits"), selected = "log2"),
+                                              selectInput("full_name", "full_name", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE"),
+                                              selectInput("verbose", "verbose", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "TRUE"),
+                                              selectInput("progress", "progress", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE")),
+                                          actionButton("run", label = "Run")),
+                                        tabPanel("Results",
+                                                 mainPanel(
+                                                   downloadButton("downloadDataCSV", "Download CSV"),
+                                                   downloadButton("downloadDataXLSX", "Download XSLX")
+                                                 ),
+                                                 fluidRow(
+                                                   column(12, 
+                                                          dataTableOutput('calculate') # calculate_lsm() output
+                                                   )
+                                                 )
+                                        ))
                    ), 
                    tabPanel("Moving window",
                             sidebarPanel(
@@ -110,17 +123,7 @@ shinyUI(
                                 )
                             )
                    ),
-                   tabPanel("Results",
-                            mainPanel(
-                                downloadButton("downloadDataCSV", "Download CSV"),
-                                downloadButton("downloadDataXLSX", "Download XSLX")
-                            ),
-                            fluidRow(
-                                column(12, 
-                                       dataTableOutput('calculate') # calculate_lsm() output
-                                )
-                            )
-                   ),
+                   
                    tabPanel("Sampling around points of interest",
                             mainPanel(
                               leafletOutput("sampling")
