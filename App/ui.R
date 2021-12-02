@@ -45,17 +45,22 @@ shinyUI(
                             sidebarPanel(
                                 fileInput("file1", "Choose raster file", accept = "image/*")# Upload file - Input,
                             ),
-                            mainPanel(plotOutput("rasterPlot"),
-                                      fluidRow(
-                                          column(12,
-                                                 dataTableOutput('checklandscapeTable') # check_landscape() table - Output
+                            mainPanel(
+                              tabsetPanel(
+                                tabPanel("View",
+                                         plotOutput("rasterPlot")
+              
+                                         ),
+                                tabPanel("Visualization",
+                                         selectInput("optionplot", "Choose an option:", c('Image','Landscape','Cores', 'Patches',"Correlation")),
+                                         plotOutput("plot"),
+                                         p("Tu będzie przycisk do pobrania wizualizacji")),
+                              )),
+                              
+                                fluidRow(column(12,dataTableOutput('checklandscapeTable') # check_landscape() table - Output
                                           )
                                       )
-                            )),
-                   tabPanel("Visualization",
-                            selectInput("optionplot", "Choose an option:", c('Image','Landscape','Cores', 'Patches',"Correlation")),
-                            plotOutput("plot"),
-                            p("Tu będzie przycisk do pobrania wizualizacji")),
+                            ),
                    tabPanel("Calculate",
                             tabsetPanel(id = "Clct", 
                                         tabPanel("Calculate",       
