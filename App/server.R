@@ -93,20 +93,27 @@ shinyServer(function(input, output){
         
     }) #KONIEC INPUT RUN
     observeEvent(input$run2, {
-        Window = reactive(
+      
+      matrix_window = matrix(
+        input$value_cell, 
+        nrow = as.integer(input$nrowcol),
+        ncol = as.integer(input$nrowcol)
+      )
+      Window = reactive(
             {
-                landscapemetrics::window_lsm(inFile(),
-                                             window = matrix(
-                                                 input$value_cell, 
-                                                 nrow = as.integer(input$nrowcol),
-                                                 ncol = as.integer(input$nrowcol)
-                                             ),
-                                             level = "landscape", name = input$landscape_name,
-                                             type = input$landscape_type, what = input$landscape_function_name,
-                                             progress = input$landscape_progress
+              landscapemetrics::window_lsm(inFile(),
+                                           window = matrix_window,
+                                           level = "landscape", name = input$landscape_name,
+                                           type = input$landscape_type, what = input$landscape_function_name,
+                                           progress = input$landscape_progress
                 )
             }
         )
+      moving_window_datatable = reactive(
+        {
+          landscapemetrics::calculate_lsm(unlist(Window()), what = input$landscape_function_name)
+        }
+      )
         output$plot2 = renderPlot(
             {
                 {
@@ -124,7 +131,10 @@ shinyServer(function(input, output){
                 }
             }
         )
-        output$window = renderDataTable(Window())
+
+        print(paste0("You have chosen: ", input$landscape_function_name))
+        print(Window())
+        output$window_table = renderDataTable(moving_window_datatable())
     }
     ) #KONIEC INPUT RUN 2
     output$sampling = renderLeaflet(
@@ -140,8 +150,5 @@ shinyServer(function(input, output){
       }
     )
     
-    observeEvent(input$level, {
-        print(paste0("You have chosen: ", input$level))
-    })
     
 })

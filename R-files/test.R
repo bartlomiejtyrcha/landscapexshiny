@@ -65,7 +65,7 @@ A = TRUE
 
 landscapes = raster("example_raster/raster_1.tif")
 
-calculate_lsm(example_raster, what = "lsm_c_area_sd", count_boundary = A,  edge_depth = 14)
+calculate_lsm(landscapes, what = "lsm_c_area_sd", count_boundary = A,  edge_depth = 14)
 calculate_lsm(landscapes, what = "lsm_c_area_sd", count_boundary = A, consider_boundary = FALSE, edge_depth = 14)
 
 set.seed(2021-05-23)

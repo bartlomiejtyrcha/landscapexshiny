@@ -12,7 +12,6 @@ library(dplyr)
 library(waiter)
 library(leaflet)
 library(leaflet.extras)
-source("function.R")
 library(rgdal)
 list_lsm = list_lsm()
 
@@ -104,24 +103,31 @@ shinyUI(
                                         ))
                    ), 
                    tabPanel("Moving window",
+                            tabsetPanel(id = "moving_window_tabset",
+                                        tabPanel("Options",
+                                                 
                             sidebarPanel(
                                 numericInput("value_cell", "value_cell", value = 1),
                                 numericInput("nrowcol", "nrowcol", value = 3),
                                 pickerInput("landscape_metric", "Choose a metric", choices=metric_landscape, options=list('actions-box' = TRUE),multiple = T),
                                 pickerInput("landscape_name","Choose a name", choices=name_landscape, options = list(`actions-box` = TRUE),multiple = T),
                                 pickerInput("landscape_type","Choose a type", choices=type_landscape, options = list(`actions-box` = TRUE),multiple = T),
-                                pickerInput("landscape_function_name","Choose a function", choices=functions_landscape, options = list(`actions-box` = TRUE),multiple = T),
+                                pickerInput("landscape_function_name","Choose a function", choices=functions_landscape, options = list(`actions-box` = TRUE),multiple = T, selected = "lsm_l_area_sd"),
                                 selectInput("landscape_progress", "progress", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE"),
                                 actionButton("run2", label = "Run")
-                            ),
+                            )),
+                            tabPanel("Results",
                             mainPanel(
-                                selectInput("optionplot2", "Choose an option:", c('Landscape','Cores', 'Patches')),
-                                plotOutput("plot2"),),
-                            fluidRow(
-                                column(12,
-                                       dataTableOutput('window')
-                                )
-                            )
+                              fluidRow(
+                                  column(12,
+                                         dataTableOutput('window_table')
+                                  )
+                              ))),
+            
+                            tabPanel("Visualization",
+                                     selectInput("optionplot2", "Choose an option:", c('Landscape','Cores', 'Patches')),
+                                     plotOutput("plot2")))
+                            
                    ),
                    
                    tabPanel("Sampling around points of interest",
