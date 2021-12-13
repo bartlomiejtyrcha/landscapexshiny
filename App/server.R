@@ -7,7 +7,14 @@ shinyServer(function(input, output){
             raster::raster(input$file1$datapath) # Upload table, input - reactive()
             }
         )
-    output$rasterPlot = renderPlot({plot(inFile())})
+    output$rasterPlot = function(inFile){
+      if(is.null(inFile=TRUE)){
+        validate(inFile, "Please upload file")
+      }
+      else renderPlot({plot(inFile())})
+    }
+    
+    
     
     output$checklandscapeTable = renderDataTable(check_landscape(inFile())) # renderTable check_landscape()
     
@@ -127,6 +134,9 @@ shinyServer(function(input, output){
                         else if(input == "Patches"){
                             show_patches(Window())
                         }
+                      else if(input == 'plot'){
+                        plot(moving_window_datatable())
+                      }
                     }
                 }
             }

@@ -26,20 +26,47 @@ show_landscape(a)
 sleep_for_a_minute <- function() { Sys.sleep(60) }
 
 start_time <- Sys.time()
-landscape = raster('example_raster/landscapes.tif')
 
 window_lsm(landscape,
                window = matrix(1, nrow = 3,ncol = 3),
                level = "landscape", name="patch area")
-a = window_lsm(landscape = landscapes, window = matrix(1, 3,3), what = c("lsm_l_pr", "lsm_l_joinent"))
-a[[1]]
-str(a[1])
-what = "lsm_l_area_sd"
-length(a)
+a = window_lsm(landscape = landscapes, window = matrix(1, 3,3), what = "lsm_l_pr")
 calculate_lsm(unlist(a), what = "lsm_l_area_sd")
 end_time <- Sys.time()
-start_time - end_time
-plot(calculate_lsm(unlist(a), what = "lsm_l_area_sd"))
+
+landscape = raster('example_raster/landscapes.tif')
+landscapes = raster("example_raster/raster_1.tif")
+
+data(landscape, package="landscapemetrics")
+start_time <- Sys.time()
+window_lsm(landscape = landscape, window = matrix(1, 3,3), what = "lsm_l_pr")
+end_time <- Sys.time()
 end_time - start_time
 
-a
+plot(landscape)
+start_time - end_time
+
+### MAPEDIT
+
+install.packages("mapedit")
+library(mapedit)
+library(mapview)
+library(leaflet)
+library(leaflet.extras)
+
+map = editMap(leaflet(), 
+              title = "Sample metrics", 
+              crs = 4326, 
+              editor = "leaflet.extras") %>% addTiles()
+
+draw = addDrawToolbar(
+  polylineOptions = drawPolylineOptions(), 
+  polygonOptions = FALSE,
+  circleOptions = FALSE,
+  rectangleOptions = FALSE,
+  marker = drawMarkerOPtions(),
+  circleMarkerOptions = FALSE)
+
+
+what_we_created <- mapview() %>%
+  editMap()

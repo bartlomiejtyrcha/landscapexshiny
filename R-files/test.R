@@ -98,6 +98,8 @@ write.xlsx(calculate_lsm(a, what = "lsm_c_area_sd"), file = paste0(Sys.time() %>
       pattern = "\\ ", replacement = "\\_"), "_calculated",".xlsx"), row.names = FALSE)
 library(landscapemetrics)
 
+landscapes = raster("example_raster/raster_1.tif")
 moving_window <- matrix(1, nrow = 3, ncol = 3)
-result = window_lsm(landscape, window = moving_window, what = c("lsm_l_pr", "lsm_l_joinent"))
+result = window_lsm(landscapes, window = moving_window, what = "lsm_l_joinent")
 result
+plot(result)
