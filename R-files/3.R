@@ -70,3 +70,19 @@ draw = addDrawToolbar(
 
 what_we_created <- mapview() %>%
   editMap()
+
+landscape = raster('Utils/NLMR_Example1.tif')
+plot(landscape)
+######### tu jest błąd
+library(mapview)
+library(mapedit)
+library(sp)
+library(sf)
+what_we_created = mapview(landscape) %>% editMap()
+my_draw = what_we_created$finished
+plot(my_draw)
+plot(my_draw[[1]])
+my_draw[[1]]
+str(my_draw[[3]])
+extract_lsm(landscape, y = my_draw[1], type = "core area metric")
+plot(my_draw[[3]])
