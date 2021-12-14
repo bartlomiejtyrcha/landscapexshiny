@@ -1,5 +1,6 @@
 library(shiny)
 
+
 shinyServer(function(input, output){
     
     inFile = reactive(
@@ -7,17 +8,24 @@ shinyServer(function(input, output){
             raster::raster(input$file1$datapath) # Upload table, input - reactive()
             }
         )
-    output$rasterPlot = function(inFile){
-      if(is.null(inFile=TRUE)){
-        validate(inFile, "Please upload file")
-      }
-      else renderPlot({plot(inFile())})
-    }
-    
-    
-    
+    observeEvent(input$file1$datapath, {
+    output$rasterPlot = renderPlot({plot(inFile())})
     output$checklandscapeTable = renderDataTable(check_landscape(inFile())) # renderTable check_landscape()
     
+    output$plot = renderPlot(
+      {
+        {
+          func_plot = function(input){
+            if(input == "Landscape"){show_landscape(inFile())}
+            else if(input == "Cores"){show_cores(inFile())}
+            else if(input == "Patches"){show_patches(inFile())}
+            else if(input == "Image"){plot(inFile())}
+          }
+        }
+        func_plot(input$optionplot)
+      })
+    
+    })
     lsm_list = reactive(
         {
             landscapemetrics::list_lsm(level = input$level, metric = input$metric, name = input$name, type = input$type, what=input$function_name)
@@ -25,32 +33,6 @@ shinyServer(function(input, output){
         )
     
     observeEvent(input$run, {
-        
-        output$plot = renderPlot(
-            {
-                {
-                    func_plot = function(input){
-                        if(input == "Landscape"){
-                            show_landscape(inFile())
-                            }
-                        else if(input == "Cores"){
-                            show_cores(inFile())
-                            }
-                        else if(input == "Patches"){
-                            show_patches(inFile())
-                            }
-                        else if(input == "Image"){
-                            plot(inFile())
-                            }
-                        else if(input == "Correlation"){
-                            show_correlation(Calculate() ## DO ZROBIENIA
-                            )
-                        }
-                    }
-                }
-                func_plot(input$optionplot)
-                }
-            )
         Calculate = reactive(
             {
                 landscapemetrics::calculate_lsm(inFile(), 

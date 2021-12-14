@@ -52,7 +52,7 @@ shinyUI(
               
                                          ),
                                 tabPanel("Visualization",
-                                         selectInput("optionplot", "Choose an option:", c('Image','Landscape','Cores', 'Patches',"Correlation")),
+                                         selectInput("optionplot", "Choose an option:", c('Image','Landscape','Cores', 'Patches')),
                                          plotOutput("plot"),
                                          p("Tu będzie przycisk do pobrania wizualizacji")),
                               )),
