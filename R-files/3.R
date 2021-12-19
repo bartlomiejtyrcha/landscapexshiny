@@ -80,9 +80,10 @@ library(sp)
 library(sf)
 what_we_created = mapview(landscape) %>% editMap()
 my_draw = what_we_created$finished
-plot(my_draw)
+str(my_draw[1])
+
 plot(my_draw[[1]])
 my_draw[[1]]
 str(my_draw[[3]])
-extract_lsm(landscape, y = my_draw[1], type = "core area metric")
+extract_lsm(landscape, y = my_draw[1], what = "lsm_p_area")
 plot(my_draw[[3]])

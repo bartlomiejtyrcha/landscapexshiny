@@ -63,7 +63,9 @@ shinyUI(
                             ),
                    tabPanel("Calculate",
                             tabsetPanel(id = "Clct", 
-                                        tabPanel("Calculate",       
+                                        tabPanel("Calculate",
+                                                 tabsetPanel(id="requirments",
+                                                             tabPanel("Required",
                                           flowLayout(
                                               pickerInput(
                                                 "level","Choose a level", 
@@ -79,9 +81,12 @@ shinyUI(
                                               pickerInput("type","Choose a type", choices=type, options = list(`actions-box` = TRUE),multiple = T),
                                               pickerInput("name","Choose a name (???)", choices=name, options = list(`actions-box` = TRUE),multiple = T),
                                               pickerInput("function_name","Choose a function", choices=list('patch' = patch$function_name, 'landscape' = landscape$function_name,
-                                                                                                            'class' = class$function_name), options = list(`actions-box` = TRUE),multiple = T),
+                                                                                                            'class' = class$function_name), options = list(`actions-box` = TRUE),multiple = T)),
+                                              actionButton("run", label = "Run")
+                                              ),
+                                          tabPanel("Additional",
+                                                   flowLayout(
                                               numericInput("directions", "Directions", value = 8),
-                                              textOutput("results"),
                                               selectInput("count_boundary", "count_boundary:",
                                                           c(TRUE, FALSE), selected = FALSE),
                                               selectInput("consider_boundary", "consider_boundary:", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE"),
@@ -93,8 +98,7 @@ shinyUI(
                                               selectInput("base", "base", c("log2" = "log2", "log" = "log", "log10" = "log10", "bits" = "bits"), selected = "log2"),
                                               selectInput("full_name", "full_name", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE"),
                                               selectInput("verbose", "verbose", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "TRUE"),
-                                              selectInput("progress", "progress", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE")),
-                                          actionButton("run", label = "Run")),
+                                              selectInput("progress", "progress", c("TRUE" = TRUE, "FALSE" = FALSE), selected = "FALSE"))))),
                                         tabPanel("Results",
                                                  mainPanel(
                                                    downloadButton("downloadDataCSV", "Download CSV"),
