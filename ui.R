@@ -1,4 +1,3 @@
-library(shiny)
 library(landscapemetrics)
 library(landscapetools)
 library(stringr)
@@ -40,7 +39,8 @@ shinyUI(
         theme = shinytheme("darkly"), # THEME 
         navbarPage("landscapemetrics x shiny",
                    tabPanel(icon("home"), 
-                            p("Homepage/index")), 
+                            includeMarkdown("README.md")
+                            ), 
                    tabPanel("Upload file",
                             sidebarPanel(
                                 fileInput("file1", "Choose raster file", accept = "image/*")# Upload file - Input,
