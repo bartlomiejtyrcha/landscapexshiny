@@ -26,6 +26,11 @@ landscapexshiny uses a number of open source projects to work properly:
 
 ## Installation
 
+```
+library(shiny)
+runGitHub("landscapexshiny", "bartlomiejtyrcha")
+```
+
 ## License
 
 MIT
