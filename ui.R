@@ -29,6 +29,10 @@ name_landscape = as.list(filter(list_lsm, level == "landscape") %>% distinct(nam
 type_landscape = as.list(filter(list_lsm, level == "landscape") %>% distinct(type))
 functions_landscape = as.list(filter(list_lsm, level == "landscape") %>% distinct(function_name))
 
+name_patch = as.list(filter(list_lsm, level == "patch") %>% distinct(name))
+type_patch = as.list(filter(list_lsm, level == "patch") %>% distinct(type))
+functions_patch = as.list(filter(list_lsm, level == "patch") %>% distinct(function_name))
+
 options(shiny.maxRequestSize = 100*1024^2) # upload
 
 
@@ -142,9 +146,14 @@ shinyUI(
                    ),
                    
                    tabPanel("Sampling around points of interest",
+                            sidebarPanel(
+                              pickerInput("sampling_name","Choose a name", choices=name_patch, options = list(`actions-box` = TRUE),multiple = T),
+                              pickerInput("sampling_type","Choose a type", choices=type_patch, options = list(`actions-box` = TRUE),multiple = T),
+                              pickerInput("sampling_function_name","Choose a function", choices=functions_patch, options = list(`actions-box` = TRUE),multiple = F, selected = "lsm_p_area"),
+                              actionButton('save_sampling', 'Save & Run')
+                            ),
                             mainPanel(
-                              editModUI("mapedit"),
-                              actionButton('save_sampling', 'Save from Map')
+                              editModUI("mapedit")
                             ))
         ))
 )
