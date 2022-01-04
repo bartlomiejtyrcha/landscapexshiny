@@ -11,6 +11,8 @@ library(dplyr)
 library(waiter)
 library(leaflet)
 library(leaflet.extras)
+library(mapedit)
+library(sf)
 library(rgdal)
 list_lsm = list_lsm()
 
@@ -141,7 +143,8 @@ shinyUI(
                    
                    tabPanel("Sampling around points of interest",
                             mainPanel(
-                              leafletOutput("sampling")
+                              editModUI("mapedit"),
+                              actionButton('save_sampling', 'Save from Map')
                             ))
         ))
 )

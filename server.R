@@ -1,6 +1,17 @@
 library(shiny)
 
 
+
+sampling_map <- leaflet() %>% addTiles() %>% addDrawToolbar(
+  polylineOptions = drawPolylineOptions(), 
+  polygonOptions = FALSE,
+  circleOptions = FALSE,
+  rectangleOptions = FALSE,
+  marker = drawMarkerOptions(),
+  circleMarkerOptions = FALSE)
+  
+  
+  #%>% editMap(viewer = dialogViewer("sampling", width = 600, height = 600) ,title = "Sample metrics", editor = "leaflet.extras", editorOptions = draw) 
 shinyServer(function(input, output){
     
     inFile = reactive(
@@ -129,18 +140,21 @@ shinyServer(function(input, output){
         output$window_table = renderDataTable(moving_window_datatable())
     }
     ) #KONIEC INPUT RUN 2
-    output$sampling = renderLeaflet(
-      {
-        leaflet() %>%
-          addTiles() %>% addDrawToolbar(position = "topright",polylineOptions = drawPolylineOptions(),
-                                        polygonOptions = FALSE,
-                                        circleOptions = FALSE,
-                                        rectangleOptions =FALSE,
-                                        markerOptions = drawMarkerOptions(repeatMode = TRUE),
-                                        circleMarkerOptions = FALSE)
-        
-      }
+    edits = callModule(
+      editMod,
+      leafmap = sampling_map,
+      id = "mapedit"
     )
+    observeEvent(input$save_sampling,
+                 {
+                   geom = edits()$finished
+                   
+                   if(!is.null(geom)){
+                     assign('new_geom', geom, envir = .GlobalEnv)
+                     sf::write_sf(geom, 'new_geom.geojson', delete_layer = TRUE, delete_dsn = TRUE)
+                   }
+                 }
+                 )
     
     
 })
