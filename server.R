@@ -132,12 +132,13 @@ shinyServer(function(input, output){
     ) #KONIEC INPUT RUN 2
     edits = callModule(
       editMod,
-      leafmap = leaflet() %>% addRasterImage(inFile()) %>% addDrawToolbar(polylineOptions = FALSE, 
+      leafmap = leaflet() %>% addTiles() %>% addDrawToolbar(
+        polylineOptions = FALSE, 
         polygonOptions = FALSE,
         circleOptions = FALSE,
         rectangleOptions = FALSE,
         marker = drawMarkerOptions(),
-        circleMarkerOptions = FALSE),
+        circleMarkerOptions = FALSE), #addRasterImage(inFile())
       id = "mapedit"
     )
     observeEvent(input$save_sampling,
