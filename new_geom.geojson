@@ -1,8 +1,0 @@
-{
-"type": "FeatureCollection",
-"name": "new_geom",
-"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
-"features": [
-{ "type": "Feature", "properties": { "X_leaflet_id": 91, "feature_type": "polyline" }, "geometry": { "type": "LineString", "coordinates": [ [ 59.350621, 68.870561 ], [ -155.895125, 35.813859 ], [ 98.344404, 43.612229 ] ] } }
-]
-}
