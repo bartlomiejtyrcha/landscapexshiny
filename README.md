@@ -1,7 +1,9 @@
 # landscapexshiny
+<div style="float:right; clear: right"><a href="https://r-spatialecology.github.io/landscapemetrics/"><img src="logo.png" alt="logo" width="25%"/></a></div>
+#
 ## _Interactive application supporting the calculation of landscape metrics_
 
-<a href="https://r-spatialecology.github.io/landscapemetrics/"><img src="logo.png" alt="logo" width="10%"/></a>
+
 
 __landscapexshiny__ is a Shiny app for supporting the  __landscapemetrics__ package in calculating landscape metrics for categorical landscape patterns.
 
