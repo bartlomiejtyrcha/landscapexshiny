@@ -101,7 +101,12 @@ shinyServer(function(input, output){
         )
       moving_window_datatable = reactive(
         {
-          landscapemetrics::calculate_lsm(unlist(Window()), what = input$landscape_function_name)
+          if(length(input$landscape_function_name) == 1){
+            landscapemetrics::calculate_lsm(unlist(Window()), what = input$landscape_function_name)
+          }
+          else{
+            message("computation only possible for one 'what' value.")
+          }
         }
       )
         output$plot2 = renderPlot(
@@ -128,6 +133,29 @@ shinyServer(function(input, output){
         print(paste0("You have chosen: ", input$landscape_function_name))
         print(Window())
         output$window_table = renderDataTable(moving_window_datatable())
+        output$downloadDataCSV_movingwindow <- downloadHandler(
+          filename = function() {
+            paste0(Sys.time() %>% str_replace_all(
+              pattern = "\\-",replacement = "\\_") %>% str_replace_all(
+                pattern = "\\:", replacement = "\\") %>% str_replace(
+                  pattern = "\\ ", replacement = "\\_"), "_window.csv")
+          },
+          content = function(file) {
+            write.csv(moving_window_datatable(), file, row.names = FALSE)
+          }
+        )
+        
+        output$downloadDataXLSX_movingwindow <- downloadHandler(
+          filename = function(){
+            paste0(Sys.time() %>% str_replace_all(
+              pattern = "\\-",replacement = "\\_") %>% str_replace_all(
+                pattern = "\\:", replacement = "\\") %>% str_replace(
+                  pattern = "\\ ", replacement = "\\_"), "_window",".xlsx") 
+          },
+          content = function(file) {
+            openxlsx::write.xlsx(moving_window_datatable(), file)
+          }
+        )
     }
     ) #KONIEC INPUT RUN 2
     edits = callModule(
@@ -145,9 +173,35 @@ shinyServer(function(input, output){
                  {
                    geom = edits()$finished
                    if(!is.null(geom)){
-                     landscapemetrics::extract_lsm(inFile(), y = geom, what = input$sampling_function_name)
+                     CalculateExtractLsm = reactive({landscapemetrics::extract_lsm(inFile(), y = geom, what = input$sampling_function_name)})
+                     output$calculate_extractlsm = renderDataTable(CalculateExtractLsm())
+                     output$downloadDataCSV_sampling <- downloadHandler(
+                       filename = function() {
+                         paste0(Sys.time() %>% str_replace_all(
+                           pattern = "\\-",replacement = "\\_") %>% str_replace_all(
+                             pattern = "\\:", replacement = "\\") %>% str_replace(
+                               pattern = "\\ ", replacement = "\\_"), "_sampling.csv")
+                       },
+                       content = function(file) {
+                         write.csv(CalculateExtractLsm(), file, row.names = FALSE)
+                       }
+                     )
+                     
+                     output$downloadDataXLSX_sampling <- downloadHandler(
+                       filename = function(){
+                         paste0(Sys.time() %>% str_replace_all(
+                           pattern = "\\-",replacement = "\\_") %>% str_replace_all(
+                             pattern = "\\:", replacement = "\\") %>% str_replace(
+                               pattern = "\\ ", replacement = "\\_"), "_sampling",".xlsx") 
+                       },
+                       content = function(file) {
+                         openxlsx::write.xlsx(CalculateExtractLsm(), file)
+                       }
+                     )
+                     
                    }
                  }
+                 
     )
 
   

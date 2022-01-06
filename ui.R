@@ -74,16 +74,8 @@ shinyUI(
                                                              tabPanel("Required",
                                           flowLayout(
                                               pickerInput(
-                                                "level","Choose a level", 
-                                                choices=as.vector(list_lsm() %>% distinct(level)), 
-                                                options = list(`actions-box` = TRUE),
-                                                multiple = T),
-                                              pickerInput(
-                                                "metric", 
-                                                "Choose a metric", 
-                                                choices=metric, 
-                                                options=list('actions-box' = TRUE),
-                                                multiple = T),
+                                                "level","Choose a level", choices=as.vector(list_lsm() %>% distinct(level)), options = list(`actions-box` = TRUE), multiple = T),
+                                              pickerInput("metric", "Choose a metric", choices=metric, options=list('actions-box' = TRUE), multiple = T),
                                               pickerInput("type","Choose a type", choices=type, options = list(`actions-box` = TRUE),multiple = T),
                                               pickerInput("name","Choose a name (???)", choices=name, options = list(`actions-box` = TRUE),multiple = T),
                                               pickerInput("function_name","Choose a function", choices=list('patch' = patch$function_name, 'landscape' = landscape$function_name,
@@ -132,6 +124,10 @@ shinyUI(
                                 actionButton("run2", label = "Run")
                             )),
                             tabPanel("Results",
+
+                              downloadButton("downloadDataCSV_movingwindow", "Download CSV"),
+                              downloadButton("downloadDataXLSX_movingwindow", "Download XSLX")
+                            ,
                             mainPanel(
                               fluidRow(
                                   column(12,
@@ -153,7 +149,18 @@ shinyUI(
                               actionButton('save_sampling', 'Save & Run')
                             ),
                             mainPanel(
-                              editModUI("mapedit")
-                            ))
+                              tabsetPanel(
+                                tabPanel("Draw",
+                                         editModUI("mapedit")),
+                                tabPanel("Results", 
+                                         downloadButton("downloadDataCSV_sampling", "Download CSV"),
+                                         downloadButton("downloadDataXLSX_sampling", "Download XSLX"),
+                                         fluidRow(column(12, dataTableOutput('calculate_extractlsm'))))
+                              )
+                              
+                            )
+
+                            
+                            )
         ))
 )
