@@ -3,17 +3,29 @@ library(shiny)
   
   #%>% editMap(viewer = dialogViewer("sampling", width = 600, height = 600) ,title = "Sample metrics", editor = "leaflet.extras", editorOptions = draw) 
 shinyServer(function(input, output){
+  map = leaflet() %>% 
+    addTiles() %>% 
+    addDrawToolbar(
+      polylineOptions = FALSE,
+      polygonOptions = FALSE,
+      circleOptions = FALSE,
+      rectangleOptions = FALSE,
+      marker = drawMarkerOptions(),
+      circleMarkerOptions = FALSE
+    )
     
-    inFile = reactive(
-        {
-            raster::raster(input$file1$datapath) # Upload table, input - reactive()
-            }
-        )
+    inFile = reactive({raster::raster(input$file1$datapath)})
     observeEvent(input$file1$datapath, {
-    output$rasterPlot = renderPlot({plot(inFile())})
+      output$rasterPlot = renderPlot({plot(inFile())})
     output$checklandscapeTable = renderDataTable(check_landscape(inFile())) # renderTable check_landscape()
+    my_rast = raster::raster(input$file1$datapath)
+    if(is.na(crs(my_rast))==TRUE){
+      crs(my_rast) = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+    }
+  
+    my_ext = as.vector(extent(my_rast))
     
-    output$plot = renderPlot(
+    plotInput = reactive(
       {
         {
           func_plot = function(input){
@@ -25,6 +37,27 @@ shinyServer(function(input, output){
         }
         func_plot(input$optionplot)
       })
+    
+    output$plot = renderPlot(
+      {
+        print(plotInput())
+      })
+    
+    leafletProxy("map-map") %>% 
+      addRasterImage(my_rast)  %>% 
+      fitBounds(my_ext[1], my_ext[3], my_ext[2], my_ext[4])
+
+    output$DownloadVisualization <- downloadHandler(
+      filename = function() {
+        paste0(Sys.time() %>% str_replace_all(
+          pattern = "\\-",replacement = "\\_") %>% str_replace_all(
+            pattern = "\\:", replacement = "\\") %>% str_replace(
+              pattern = "\\ ", replacement = "\\_"), "_visualization", '.png')
+      },
+      content = function(file) {
+        ggsave(file, plot = plotInput(), device = "png")
+      }
+    )
     
     })
     lsm_list = reactive(
@@ -130,8 +163,6 @@ shinyServer(function(input, output){
             }
         )
 
-        print(paste0("You have chosen: ", input$landscape_function_name))
-        print(Window())
         output$window_table = renderDataTable(moving_window_datatable())
         output$downloadDataCSV_movingwindow <- downloadHandler(
           filename = function() {
@@ -157,17 +188,11 @@ shinyServer(function(input, output){
           }
         )
     }
-    ) #KONIEC INPUT RUN 2
+    ) #KONIEC INPUT RUN 2F
     edits = callModule(
       editMod,
-      leafmap = leaflet() %>% addTiles() %>% addDrawToolbar(
-        polylineOptions = FALSE, 
-        polygonOptions = FALSE,
-        circleOptions = FALSE,
-        rectangleOptions = FALSE,
-        marker = drawMarkerOptions(),
-        circleMarkerOptions = FALSE), #addRasterImage(inFile())
-      id = "mapedit"
+      leafmap = map,
+      id = "map"
     )
     observeEvent(input$save_sampling,
                  {
