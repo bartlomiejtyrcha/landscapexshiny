@@ -25,7 +25,7 @@ shinyServer(function(input, output){
   
     my_ext = as.vector(extent(my_rast))
     
-    output$plot = renderPlot(
+    plotInput = reactive(
       {
         {
           func_plot = function(input){
@@ -38,19 +38,24 @@ shinyServer(function(input, output){
         func_plot(input$optionplot)
       })
     
+    output$plot = renderPlot(
+      {
+        print(plotInput())
+      })
+    
     leafletProxy("map-map") %>% 
       addRasterImage(my_rast)  %>% 
       fitBounds(my_ext[1], my_ext[3], my_ext[2], my_ext[4])
-    
+
     output$DownloadVisualization <- downloadHandler(
       filename = function() {
         paste0(Sys.time() %>% str_replace_all(
           pattern = "\\-",replacement = "\\_") %>% str_replace_all(
             pattern = "\\:", replacement = "\\") %>% str_replace(
-              pattern = "\\ ", replacement = "\\_"), "_visualization.png")
+              pattern = "\\ ", replacement = "\\_"), "_visualization", '.png')
       },
       content = function(file) {
-        ggsave(file, output$plot)
+        ggsave(file, plot = plotInput(), device = "png")
       }
     )
     
@@ -158,8 +163,6 @@ shinyServer(function(input, output){
             }
         )
 
-        print(paste0("You have chosen: ", input$landscape_function_name))
-        print(Window())
         output$window_table = renderDataTable(moving_window_datatable())
         output$downloadDataCSV_movingwindow <- downloadHandler(
           filename = function() {
@@ -185,7 +188,7 @@ shinyServer(function(input, output){
           }
         )
     }
-    ) #KONIEC INPUT RUN 2
+    ) #KONIEC INPUT RUN 2F
     edits = callModule(
       editMod,
       leafmap = map,
