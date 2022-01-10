@@ -14,6 +14,7 @@ library(leaflet.extras)
 library(mapedit)
 library(sf)
 library(rgdal)
+library(ggplot2)
 list_lsm = list_lsm()
 
 type = distinct(list_lsm, type)$type
@@ -60,7 +61,7 @@ shinyUI(
                                 tabPanel("Visualization",
                                          selectInput("optionplot", "Choose an option:", c('Image','Landscape','Cores', 'Patches')),
                                          plotOutput("plot"),
-                                         p("Tu będzie przycisk do pobrania wizualizacji")),
+                                         downloadButton("DownloadVisualization", "Save as ...")),
                               )),
                               
                                 fluidRow(column(12,dataTableOutput('checklandscapeTable') # check_landscape() table - Output
@@ -151,7 +152,7 @@ shinyUI(
                             mainPanel(
                               tabsetPanel(
                                 tabPanel("Draw",
-                                         editModUI("mapedit")),
+                                         editModUI("map")),
                                 tabPanel("Results", 
                                          downloadButton("downloadDataCSV_sampling", "Download CSV"),
                                          downloadButton("downloadDataXLSX_sampling", "Download XSLX"),

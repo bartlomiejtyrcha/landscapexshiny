@@ -73,6 +73,9 @@ what_we_created <- mapview() %>%
 
 landscape = raster('Utils/NLMR_Example1.tif')
 plot(landscape)
+
+crs(landscape) = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" 
+landscape
 ######### tu jest błąd
 library(mapview)
 library(mapedit)
