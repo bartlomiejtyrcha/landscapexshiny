@@ -76,9 +76,9 @@ shinyUI(
                                           flowLayout(
                                               pickerInput(
                                                 "level","Choose a level", choices=as.vector(list_lsm() %>% distinct(level)), options = list(`actions-box` = TRUE), multiple = T),
-                                              pickerInput("metric", "Choose a metric", choices=metric, options=list('actions-box' = TRUE), multiple = T),
-                                              pickerInput("type","Choose a type", choices=type, options = list(`actions-box` = TRUE),multiple = T),
-                                              pickerInput("name","Choose a name (???)", choices=name, options = list(`actions-box` = TRUE),multiple = T),
+                                              pickerInput("metric", "Choose an abbreviation", choices=metric, options=list('actions-box' = TRUE), multiple = T),
+                                              pickerInput("name","Choose a metric", choices=name, options = list(`actions-box` = TRUE),multiple = T),
+                                              pickerInput("type","Choose a group of metrics", choices=type, options = list(`actions-box` = TRUE),multiple = T),
                                               pickerInput("function_name","Choose a function", choices=list('patch' = patch$function_name, 'landscape' = landscape$function_name,
                                                                                                             'class' = class$function_name), options = list(`actions-box` = TRUE),multiple = T)),
                                               actionButton("run", label = "Run")

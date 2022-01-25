@@ -33,8 +33,27 @@ bench::mark(
 install.packages("NLMR")
 
 # nlm_gaussianfield
+library(NLMR)
+library(raster)
+as.Date()
 
-random_gaussian = NLMR::nlm_gaussianfield(nrow = 100, ncol = 100,
-                                          autocorr_range = 10)
+set.seed(Sys.Date())
+
+random_gaussian = NLMR::nlm_gaussianfield(nrow = 80, ncol = 80, resolution = 50,
+                                          autocorr_range = 5)
+random_gaussian
 plot(random_gaussian)
-writeRaster(random_gaussian, 'NLMR_Example1.tif')
+crs(random_gaussian) = "EPSG:2180" 
+writeRaster(random_gaussian, 'NLMR_Raster1_A.tif', overwrite=TRUE)
+a = raster('NLMR_Raster1_A.tif')
+plot(a)
+
+
+random_gaussian = NLMR::nlm_gaussianfield(nrow = 40, ncol = 40, resolution = 60,
+                                          autocorr_range = 10)
+random_gaussian
+plot(random_gaussian)
+writeRaster(random_gaussian, 'NLMR_Raster2_A.tif', overwrite=TRUE)
+a = raster('NLMR_Raster2_A.tif')
+plot(a)
+a
