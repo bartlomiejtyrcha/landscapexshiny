@@ -34,7 +34,7 @@ name_patch = as.list(filter(list_lsm, level == "patch") %>% distinct(name))
 type_patch = as.list(filter(list_lsm, level == "patch") %>% distinct(type))
 functions_patch = as.list(filter(list_lsm, level == "patch") %>% distinct(function_name))
 
-options(shiny.maxRequestSize = 100*1024^2) # upload
+options(shiny.maxRequestSize = 20*1024^2) # upload
 
 
 # Define UI for application that draws a histogram
