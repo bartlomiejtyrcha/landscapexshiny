@@ -10,9 +10,9 @@ __landscapexshiny__ is a Shiny app for supporting the  __landscapemetrics__ pack
 
 ## Features
 
-- Import a raster file and visualization 
+- Import of a raster file and its visualization 
 - Visualization of landscapes, cores and patches
-- Calculation of landscape metrics and export to __csv__ and __xlsx__
+- Calculation of landscape metrics and their export to __csv__ and __xlsx__
 - Implementation of moving windows in landscapemetrics
 
 ## Tech
