@@ -19,8 +19,8 @@ list_lsm = list_lsm()
 
 type = distinct(list_lsm, type)$type
 level = distinct(list_lsm, level)$level
-name = distinct(list_lsm, name)$name
-metric = distinct(list_lsm, metric)$metric
+name = sort(distinct(list_lsm, name)$name)
+metric = sort(distinct(list_lsm, metric)$metric)
 patch = filter(list_lsm, level == "patch")
 landscape = filter(list_lsm, level == "landscape")
 class = filter(list_lsm, level == "class")
