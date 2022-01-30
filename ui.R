@@ -14,7 +14,6 @@ library(leaflet.extras)
 library(mapedit)
 library(sf)
 library(rgdal)
-library(ggplot2)
 list_lsm = list_lsm()
 
 type = distinct(list_lsm, type)$type

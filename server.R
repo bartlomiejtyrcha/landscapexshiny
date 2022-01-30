@@ -46,18 +46,6 @@ shinyServer(function(input, output){
     leafletProxy("map-map") %>% 
       addRasterImage(my_rast)  %>% 
       fitBounds(my_ext[1], my_ext[3], my_ext[2], my_ext[4])
-
-    output$DownloadVisualization <- downloadHandler(
-      filename = function() {
-        paste0(Sys.time() %>% str_replace_all(
-          pattern = "\\-",replacement = "\\_") %>% str_replace_all(
-            pattern = "\\:", replacement = "\\") %>% str_replace(
-              pattern = "\\ ", replacement = "\\_"), "_visualization", '.png')
-      },
-      content = function(file) {
-        ggsave(file, plot = plotInput(), device = "png")
-      }
-    )
     
     })
     lsm_list = reactive(
