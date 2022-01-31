@@ -43,6 +43,8 @@ shinyServer(function(input, output){
         print(plotInput())
       })
     
+    #raster_crs = leaflet::leafletCRS(proj4def = projection(my_rast))
+    
     leafletProxy("map-map") %>% 
       addRasterImage(my_rast)  %>% 
       fitBounds(my_ext[1], my_ext[3], my_ext[2], my_ext[4])
@@ -130,27 +132,28 @@ shinyServer(function(input, output){
           }
         }
       )
-        output$plot2 = renderPlot(
-            {
-                {
-                    func_plot = function(input){
-                        if(input == "Landscape"){
-                            show_landscape(Window())
-                        }
-                        else if(input == "Cores"){
-                            show_cores(Window())
-                        }
-                        else if(input == "Patches"){
-                            show_patches(Window())
-                        }
-                      else if(input == 'plot'){
-                        plot(moving_window_datatable())
-                      }
-                    }
-                }
+      
+      plotInputMovingWindow = reactive(
+        {
+          {
+            func_plot = function(input){
+              if(input == "Landscape"){
+                show_landscape(unlist(Window())[[1]])
+              }
+              else if(input == "Cores"){
+                show_cores(unlist(Window()))
+              }
+              else if(input == "Patches"){
+                show_patches(unlist(Window()))
+              }
+              else if(input == 'Image'){
+                plot(unlist(Window())[[1]])
+              }
             }
-        )
-
+          }
+          func_plot(input$optionplot2)
+        })
+        output$plot2 = renderPlot({print(plotInputMovingWindow())})
         output$window_table = renderDataTable(moving_window_datatable())
         output$downloadDataCSV_movingwindow <- downloadHandler(
           filename = function() {

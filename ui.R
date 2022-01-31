@@ -136,7 +136,7 @@ shinyUI(
                               ))),
             
                             tabPanel("Visualization",
-                                     selectInput("optionplot2", "Choose an option:", c('plot','Landscape','Cores', 'Patches')),
+                                     selectInput("optionplot2", "Choose an option:", c('Image','Landscape','Cores', 'Patches')),
                                      plotOutput("plot2")))
                             
                    ),
