@@ -15,17 +15,6 @@ __landscapexshiny__ is a Shiny app for supporting the  __landscapemetrics__ pack
 - Calculation of landscape metrics and their export to __csv__ and __xlsx__
 - Implementation of moving windows in landscapemetrics
 
-## Tech
-
-landscapexshiny uses a number of open source projects to work properly:
-
-- [shiny] - Web Application Framework for R
-- [landscapemetrics] is a R package for calculating landscape metrics for categorical landscape patterns in a tidy workflow
-- [landscapetools] provides utility functions to work with landscape data (raster* Objects)
-- [stringr]
-- [shinyWidgets], [shinythemes], [shinycssloaders], [waiter] - GUI
-- [openxlsx] - Export to XLSX (Microsoft Excel) file
-- [dplyr]
 
 ## Installation
 
@@ -41,6 +30,18 @@ install.packages(c("shiny", "landscapemetrics", "landscapetools", "stringr", "sh
 library(shiny)
 runGitHub("landscapexshiny", "bartlomiejtyrcha")
 ```
+
+## Tech
+
+landscapexshiny uses a number of open source projects to work properly:
+
+- [shiny] - Web Application Framework for R
+- [landscapemetrics] is a R package for calculating landscape metrics for categorical landscape patterns in a tidy workflow
+- [landscapetools] provides utility functions to work with landscape data (raster* Objects)
+- [stringr]
+- [shinyWidgets], [shinythemes], [shinycssloaders], [waiter] - GUI
+- [openxlsx] - Export to XLSX (Microsoft Excel) file
+- [dplyr]
 
 ## License
 
