@@ -29,8 +29,14 @@ landscapexshiny uses a number of open source projects to work properly:
 
 ## Installation
 
+```r
+install.packages(c("shiny", "landscapemetrics", "landscapetools", "stringr", "shinyWidgets", "shinycssloaders", "shinythemes",
+                   "raster", "openxlsx", "dplyr", "waiter", "leaflet", "leaflet.extras", "mapedit", "sf", "rgdal"))
 ```
-install.packages(c("shiny", "landscapemetrics", "landscapetools", "stringr", "shinyWidgets", "shinycssloaders", "shinythemes", "raster", "openxlsx", "dplyr", "waiter", "leaflet", "leaflet.extras", "mapedit", "sf", "rgdal"))
+
+## Using
+
+```r
 library(shiny)
 runGitHub("landscapexshiny", "bartlomiejtyrcha")
 ```
