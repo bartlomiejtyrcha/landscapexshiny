@@ -200,7 +200,20 @@ shinyServer(function(input, output){
                    }
                    if(!is.null(geom)){
                      geom = st_transform(geom, crs=st_crs(crs(extract_file, asText=TRUE)))
-                     CalculateExtractLsm = reactive({landscapemetrics::extract_lsm(extract_file, y = geom, what = input$sampling_function_name)})
+                     
+                     CalculateExtractLsm = reactive(
+                       {
+                         if(input$type_sample_point=="Extract"){
+                           print("XD")
+                           sample_calculate = landscapemetrics::extract_lsm(extract_file, y = geom, what = input$sampling_function_name)
+                         }
+                         if(input$type_sample_point=="Sample"){
+                           print('hah')
+                           sample_calculate = landscapemetrics::sample_lsm(extract_file, y = geom, size = input$sampling_size)
+                         }
+                         sample_calculate
+                       }
+                       )
                      output$calculate_extractlsm = renderDataTable(CalculateExtractLsm())
                      output$downloadDataCSV_sampling <- downloadHandler(
                        filename = function() {

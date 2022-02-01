@@ -143,9 +143,11 @@ shinyUI(
                    
                    tabPanel("Sampling around points of interest",
                             sidebarPanel(
+                              selectInput("type_sample_point", "Method", c("Extract", "Sample")),
                               pickerInput("sampling_name","Choose a name", choices=name_patch, options = list(`actions-box` = TRUE),multiple = T),
                               pickerInput("sampling_type","Choose a type", choices=type_patch, options = list(`actions-box` = TRUE),multiple = T),
                               pickerInput("sampling_function_name","Choose a function", choices=functions_patch, options = list(`actions-box` = TRUE),multiple = F, selected = "lsm_p_area"),
+                              textInput("sampling_size", "Size", value = 10),
                               actionButton('save_sampling', 'Save & Run')
                             ),
                             mainPanel(
