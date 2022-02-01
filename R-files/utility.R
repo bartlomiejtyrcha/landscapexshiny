@@ -39,6 +39,23 @@ as.Date()
 
 set.seed(Sys.Date())
 
+set.seed(2020-01-01)
+
+single_landscape_create = function(x) {
+  NLMR::nlm_randomcluster(ncol = 80, nrow = 80, resolution = 50, p = 0.4, ai = c(0.25, 0.25, 0.5),
+                          rescale = FALSE)
+}
+landscape <- single_landscape_create()
+plot(landscape)
+crs(landscape) = "EPSG:2180"
+writeRaster(landscape, 'NLMR_Raster1_A.tif', overwrite=TRUE)
+
+
+what_we_created = mapview(landscape) %>% editMap()
+my_draw = what_we_created$finished
+plot(my_draw)
+extract_lsm(landscape, y = my_draw[1], what = "lsm_p_area")
+
 random_gaussian = NLMR::nlm_gaussianfield(nrow = 80, ncol = 80, resolution = 50,
                                           autocorr_range = 5)
 random_gaussian
@@ -48,26 +65,43 @@ writeRaster(random_gaussian, 'NLMR_Raster1_A.tif', overwrite=TRUE)
 a = raster('NLMR_Raster1_A.tif')
 plot(a)
 
+set.seed(Sys.Date())
+single_landscape_create = function(x) {
+  NLMR::nlm_randomcluster(ncol = 40, nrow = 40, resolution = 60, p = 0.5, ai = c(0.25, 0.25, 0.5),
+                          rescale = FALSE)
+}
+landscape2 <- single_landscape_create()
+plot(landscape2)
+writeRaster(landscape2, 'NLMR_Raster2_A.tif', overwrite=TRUE)
 
-random_gaussian = NLMR::nlm_gaussianfield(nrow = 40, ncol = 40, resolution = 60,
-                                          autocorr_range = 10)
-random_gaussian
-plot(random_gaussian)
-writeRaster(random_gaussian, 'NLMR_Raster2_A.tif', overwrite=TRUE)
-a = raster('NLMR_Raster2_A.tif')
-plot(a)
-a
+png("test_rasters.png", width = 1500, height = 500)
+par(mfrow=c(1,2))
+plot(landscape)
+plot(landscape2, legend=FALSE)
+dev.off()
 
 set.seed(2018-05-12)
+
+
+
+
+
+
+
+
 
 single_landscape_create = function(x) {
   NLMR::nlm_randomcluster(ncol = 50, nrow = 50, p = 0.4, ai = c(0.25, 0.25, 0.5),
                           rescale = FALSE)
 }
-
-# Example maps from NLMR
 landscape <- single_landscape_create()
 plot(landscape)
+calculate_lsm(landscape, what = "lsm_l_area_sd")
+
+
+
+
+
 writeRaster(landscape, 'NLMRtest.tif', overwrite=TRUE)
 crs(landscape) = "EPSG:2180"
 library(mapview)
