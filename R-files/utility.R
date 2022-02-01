@@ -57,3 +57,56 @@ writeRaster(random_gaussian, 'NLMR_Raster2_A.tif', overwrite=TRUE)
 a = raster('NLMR_Raster2_A.tif')
 plot(a)
 a
+
+set.seed(2018-05-12)
+
+single_landscape_create = function(x) {
+  NLMR::nlm_randomcluster(ncol = 50, nrow = 50, p = 0.4, ai = c(0.25, 0.25, 0.5),
+                          rescale = FALSE)
+}
+
+# Example maps from NLMR
+landscape <- single_landscape_create()
+plot(landscape)
+writeRaster(landscape, 'NLMRtest.tif', overwrite=TRUE)
+crs(landscape) = "EPSG:2180"
+library(mapview)
+library(mapedit)
+library(sp)
+library(sf)
+library(landscapemetrics)
+landscape = raster('Utils/landscapes.tif')
+crs(landscape) = "EPSG:2180"
+landscape_projected = projectRaster(landscape, crs = "EPSG:4326")
+
+what_we_created = mapview(landscape) %>% editMap()
+my_draw = what_we_created$finished
+st_transform(my_draw, "EPSG:2180")
+plot(my_draw)
+extract_lsm(landscape, y = my_draw[1], what = "lsm_p_area")
+landscape
+check_landscape(landscape)
+
+check_landscape(landscape)
+landscape
+plot(landscape)
+landscape_empty = projectExtent(landscape, "EPSG:4326")
+landscape_projected = projectRaster(landscape, crs = "EPSG:4326")
+plot(landscape_projected)
+res(landscape)
+res(landscape_projected)
+hist(landscape)
+hist(landscape_projected)
+check_landscape(landscape_projected)
+
+
+what_we_created = mapview(landscape_projected) %>% editMap()
+
+my_draw = what_we_created$finished
+
+
+plot(my_draw)
+
+extract_lsm(landscape_projected, y = my_draw[1], what = "lsm_p_area")
+
+calculate_landscape = calculate_lsm(landscape_projected, what = "lsm_l_shdi" )

@@ -19,10 +19,17 @@ shinyServer(function(input, output){
       output$rasterPlot = renderPlot({plot(inFile())})
     output$checklandscapeTable = renderDataTable(check_landscape(inFile())) # renderTable check_landscape()
     my_rast = raster::raster(input$file1$datapath)
+    
+    
     if(is.na(crs(my_rast))==TRUE){
-      crs(my_rast) = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+      crs(my_rast) = "EPSG:4326"
     }
-  
+    
+    if(crs(my_rast, asText=TRUE)!=crs("EPSG:4326", asText=TRUE)&&crs(my_rast, asText=TRUE)!="+proj=longlat +datum=WGS84 +no_defs"){
+      print("projectRaster")
+      my_rast = projectRaster(my_rast, crs = "EPSG:4326")
+    }
+    
     my_ext = as.vector(extent(my_rast))
     
     plotInput = reactive(
@@ -42,8 +49,6 @@ shinyServer(function(input, output){
       {
         print(plotInput())
       })
-    
-    #raster_crs = leaflet::leafletCRS(proj4def = projection(my_rast))
     
     leafletProxy("map-map") %>% 
       addRasterImage(my_rast)  %>% 
@@ -187,9 +192,15 @@ shinyServer(function(input, output){
     )
     observeEvent(input$save_sampling,
                  {
+                   extract_file = inFile()
+                   
                    geom = edits()$finished
+                   if(is.na(crs(extract_file))){
+                     crs(extract_file) = "EPSG:4326"
+                   }
                    if(!is.null(geom)){
-                     CalculateExtractLsm = reactive({landscapemetrics::extract_lsm(inFile(), y = geom, what = input$sampling_function_name)})
+                     geom = st_transform(geom, crs=st_crs(crs(extract_file, asText=TRUE)))
+                     CalculateExtractLsm = reactive({landscapemetrics::extract_lsm(extract_file, y = geom, what = input$sampling_function_name)})
                      output$calculate_extractlsm = renderDataTable(CalculateExtractLsm())
                      output$downloadDataCSV_sampling <- downloadHandler(
                        filename = function() {
