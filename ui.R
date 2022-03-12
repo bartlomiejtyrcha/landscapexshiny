@@ -59,8 +59,7 @@ shinyUI(
                                          ),
                                 tabPanel("Visualization",
                                          selectInput("optionplot", "Choose an option:", c('Image','Landscape','Cores', 'Patches')),
-                                         plotOutput("plot"),
-                                         downloadButton("DownloadVisualization", "Save as ...")),
+                                         plotOutput("plot")),
                               )),
                               
                                 fluidRow(column(12,dataTableOutput('checklandscapeTable') # check_landscape() table - Output
